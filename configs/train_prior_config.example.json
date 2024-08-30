@@ -37,8 +37,8 @@
         "batch_size": 128,
         "num_data_points": 100000,
         "eval_every_seconds": 1600,
-        "image_url": "<path to your images>",
-        "meta_url": "<path to your metadata>",
+        "image_url":"/workspace/manugaur/laion400m/clip/dummy_img_emb" ,
+        "meta_url": "/workspace/manugaur/laion400m/clip/dummy_metadata",
         "splits": {
             "train": 0.8,
             "val":  0.1,
@@ -64,8 +64,9 @@
         "overwrite_data_path": true,
         "log": {
             "log_type": "wandb",
-            "wandb_entity": "<your wandb username>",
-            "wandb_project": "prior_debugging",
+            "use_wandb": true, 
+            "wandb_entity": "manugaur",
+            "wandb_project": "diffusion_prior",
             "wandb_resume": false,
             "verbose": true
         },

@@ -1,3 +1,8 @@
+#KathaAI
+.prior/
+.vscode/
+wandb/
+
 # default experiment tracker data
 .tracker-data/
 

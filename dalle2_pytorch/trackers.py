@@ -111,7 +111,9 @@ class WandbLogger(BaseLogger):
         assert self.entity is not None, "wandb_entity must be specified for wandb logger"
         assert self.project is not None, "wandb_project must be specified for wandb logger"
         self.wandb = import_or_print_error('wandb', '`pip install wandb` to use the wandb logger')
+        self.use_wandb = full_config.tracker.log.use_wandb  
         os.environ["WANDB_SILENT"] = "true"
+        
         # Initializes the wandb run
         init_object = {
             "entity": self.entity,
@@ -127,13 +129,15 @@ class WandbLogger(BaseLogger):
             init_object['resume'] = 'must'
             init_object['id'] = self.run_id
 
-        self.wandb.init(**init_object)
-        print(f"Logging to wandb run {self.wandb.run.path}-{self.wandb.run.name}")
+        if full_config.tracker.log.use_wandb:
+            self.wandb.init(**init_object)
+            print(f"Logging to wandb run {self.wandb.run.path}-{self.wandb.run.name}")
 
     def log(self, log, **kwargs) -> None:
         if self.verbose:
             print(log)
-        self.wandb.log(log, **kwargs)
+        if self.use_wandb:
+            self.wandb.log(log, **kwargs)
 
     def log_images(self, images, captions=[], image_section="images", **kwargs) -> None:
         """
@@ -151,7 +155,8 @@ class WandbLogger(BaseLogger):
     def log_error(self, error_string, step=None, **kwargs) -> None:
         if self.verbose:
             print(error_string)
-        self.wandb.log({"error": error_string, **kwargs}, step=step)
+        if self.use_wandb:
+            self.wandb.log({"error": error_string, **kwargs}, step=step)
 
     def get_resume_data(self, **kwargs) -> dict:
         # In order to resume, we need wandb_entity, wandb_project, and wandb_run_id
